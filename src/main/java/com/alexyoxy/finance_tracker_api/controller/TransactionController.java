@@ -1,7 +1,7 @@
 package com.alexyoxy.finance_tracker_api.controller;
 
 import com.alexyoxy.finance_tracker_api.dto.CreateTransactionRequest;
-import com.alexyoxy.finance_tracker_api.entity.Transaction;
+import com.alexyoxy.finance_tracker_api.dto.TransactionResponse;
 import com.alexyoxy.finance_tracker_api.service.TransactionService;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,12 +17,12 @@ public class TransactionController {
     }
 
     @GetMapping
-    public List<Transaction> getAll() {
+    public List<TransactionResponse> getAll() {
         return transactionService.findAll();
     }
 
     @PostMapping
-    public Transaction create(@RequestBody CreateTransactionRequest request) {
+    public TransactionResponse create(@RequestBody CreateTransactionRequest request) {
         return transactionService.create(request);
     }
 }

@@ -1,7 +1,9 @@
 package com.alexyoxy.finance_tracker_api.service;
 
 import com.alexyoxy.finance_tracker_api.dto.CreateTransactionRequest;
+import com.alexyoxy.finance_tracker_api.dto.TransactionResponse;
 import com.alexyoxy.finance_tracker_api.entity.Transaction;
+import com.alexyoxy.finance_tracker_api.mapper.TransactionMapper;
 import com.alexyoxy.finance_tracker_api.repository.TransactionRepository;
 import org.springframework.stereotype.Service;
 
@@ -10,25 +12,28 @@ import java.util.List;
 @Service
 public class TransactionService {
     private final TransactionRepository transactionRepository;
+    private final TransactionMapper transactionMapper;
 
-    public TransactionService(TransactionRepository transactionRepository) {
+    public TransactionService(
+            TransactionRepository transactionRepository,
+            TransactionMapper transactionMapper
+    ) {
         this.transactionRepository = transactionRepository;
+        this.transactionMapper = transactionMapper;
     }
 
-    public List<Transaction> findAll() {
-        return transactionRepository.findAll();
+    public List<TransactionResponse> findAll() {
+        return transactionRepository.findAll()
+                .stream()
+                .map(transactionMapper::toResponse)
+                .toList();
     }
 
-    public Transaction create(CreateTransactionRequest request) {
+    public TransactionResponse create(CreateTransactionRequest request) {
 
-        Transaction transaction = new Transaction();
+        Transaction transaction = transactionMapper.toEntity(request);
+        Transaction savedTransaction = transactionRepository.save(transaction);
 
-        transaction.setAmount(request.amount());
-        transaction.setType(request.type());
-        transaction.setCategory(request.category());
-        transaction.setDescription(request.description());
-        transaction.setTransactionDate(request.transactionDate());
-
-        return transactionRepository.save(transaction);
+        return transactionMapper.toResponse(savedTransaction);
     }
 }
