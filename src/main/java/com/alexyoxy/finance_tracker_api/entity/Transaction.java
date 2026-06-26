@@ -15,7 +15,9 @@ public class Transaction {
 
     private BigDecimal amount;
 
-    private String type;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TransactionType type;
 
     private String category;
 
@@ -31,7 +33,7 @@ public class Transaction {
         this.createdAt = LocalDateTime.now();
     }
 
-    public Transaction(Long id, BigDecimal amount, String type, String category, String description, LocalDate transactionDate, LocalDateTime createdAt) {
+    public Transaction(Long id, BigDecimal amount, TransactionType type, String category, String description, LocalDate transactionDate, LocalDateTime createdAt) {
         this.id = id;
         this.amount = amount;
         this.type = type;
@@ -60,11 +62,11 @@ public class Transaction {
         this.amount = amount;
     }
 
-    public String getType() {
+    public TransactionType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(TransactionType type) {
         this.type = type;
     }
 
